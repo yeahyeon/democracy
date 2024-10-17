@@ -14,28 +14,36 @@ public class VoteService {
         this.voteRepository = voteRepository;
     }
 
-    public Mono<Vote> getVotes(String id) {
-        return voteRepository.findById(Integer.valueOf(id));
+    public Mono<Vote> createVote(Vote vote) {
+        return voteRepository.save(vote);
     }
 
-    public Mono<Vote> voteAgree(String id) {
-        return voteRepository.findById(Integer.valueOf(id))
+    public Mono<Vote> getVoteById(Long id) {
+        return voteRepository.findById(id);
+    }
+
+    public Mono<Vote> voteAgree(Long id) {
+        return voteRepository.findById(id)
                 .flatMap(vote -> {
                     vote.setAgree(vote.getAgree() + 1);
                     return voteRepository.save(vote);
                 });
     }
 
-    public Mono<Vote> voteDisagree(String id) {
-        return voteRepository.findById(Integer.valueOf(id))
+    public Mono<Vote> voteDisagree(Long id) {
+        return voteRepository.findById(id)
                 .flatMap(vote -> {
                     vote.setDisagree(vote.getDisagree() + 1);
                     return voteRepository.save(vote);
                 });
     }
 
-    public Flux<Vote> streamVotes(String id) {
+    public Flux<Vote> getAllVotes() {
+        return voteRepository.findAll();
+    }
+
+    public Flux<Vote> streamVotes() {
         return Flux.interval(Duration.ofSeconds(1))
-                .flatMap(tick -> voteRepository.findById(Integer.valueOf(id)).flux());
+                .flatMap(tick -> voteRepository.findAll());
     }
 }

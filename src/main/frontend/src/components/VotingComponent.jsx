@@ -1,54 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import './VotingComponent.css';
 
-function VotingComponent() {
-    const [votes, setVotes] = useState({ agree: 0, disagree: 0 });
+function VotingComponent({ topic, voteId, setIsVoting }) {
+    const [agree, setAgree] = useState(0);
+    const [disagree, setDisagree] = useState(0);
+    const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
 
     useEffect(() => {
-        const eventSource = new EventSource('http://localhost:8080/votes/stream/voteId');
-
-        eventSource.onmessage = function(event) {
-            const voteData = JSON.parse(event.data);
-            setVotes(voteData);
+        const eventSource = new EventSource("http://localhost:8080/votes/stream");
+        eventSource.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            setAgree(data.agree);
+            setDisagree(data.disagree);
         };
-
         return () => {
             eventSource.close();
         };
     }, []);
 
-    const voteAgree = async () => {
-        await fetch('http://localhost:8080/votes/agree/voteId', { method: 'POST' });
+    useEffect(() => {
+        if (timeLeft > 0) {
+            const timer = setInterval(() => {
+                setTimeLeft((prevTime) => prevTime - 1);
+            }, 1000);
+            return () => clearInterval(timer);
+        } else {
+            setIsVoting(false); // Return to topic input screen when time runs out
+        }
+    }, [timeLeft, setIsVoting]);
+
+    const vote = (type) => {
+        fetch(`http://localhost:8080/votes/${type}/${voteId}`, {
+            method: "POST",
+        });
     };
 
-    const voteDisagree = async () => {
-        await fetch('http://localhost:8080/votes/disagree/voteId', { method: 'POST' });
+    const formatTime = (seconds) => {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
     };
-
-    // 전체 투표 수 계산
-    const totalVotes = votes.agree + votes.disagree;
-
-    // 투표 비율 계산 (최소값을 1로 설정하여 기본 크기 보장)
-    const agreeFlex = totalVotes ? votes.agree / totalVotes : 0.5;
-    const disagreeFlex = totalVotes ? votes.disagree / totalVotes : 0.5;
 
     return (
-        <div className="voting-container">
-            <div
-                className="agree-area"
-                onClick={voteAgree}
-                style={{ flexGrow: agreeFlex }}
-            >
-                <div className="label-agree">Agree</div>
-                <div className="vote-count">{votes.agree}</div>
+        <div className="voting-component">
+            <h2>Topic: {topic}</h2>
+            <div>
+                <button onClick={() => vote("agree")}>Agree</button>
+                <button onClick={() => vote("disagree")}>Disagree</button>
             </div>
-            <div
-                className="disagree-area"
-                onClick={voteDisagree}
-                style={{ flexGrow: disagreeFlex }}
-            >
-                <div className="label-disagree">Disagree</div>
-                <div className="vote-count">{votes.disagree}</div>
+            <div className="results">
+                <p>Agree: {agree}</p>
+                <p>Disagree: {disagree}</p>
+            </div>
+            <div className="timer">
+                <p>Time Left: {formatTime(timeLeft)}</p>
             </div>
         </div>
     );
