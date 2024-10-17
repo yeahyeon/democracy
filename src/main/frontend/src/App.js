@@ -1,5 +1,5 @@
 import React from 'react';
-import VotingComponent from './VotingComponent';
+import VotingComponent from './components/VotingComponent';
 
 function App() {
   return (

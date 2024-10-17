@@ -1,0 +1,63 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.voting-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1000px;
+    height: 200px;
+    gap: 20px;
+}
+
+.agree-area, .disagree-area {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 10px;
+    box-sizing: border-box;
+    transition: flex-grow 0.5s ease;
+    height: 100%;
+}
+
+.agree-area {
+    background-color: blue;
+    min-width: 50px;
+}
+
+.disagree-area {
+    background-color: red;
+    min-width: 50px;
+}
+
+.label-agree, .label-disagree {
+    position: absolute;
+    top: 10px;
+    font-size: 18px;
+}
+
+.label-agree {
+    left: 10px;
+}
+
+.label-disagree {
+    right: 10px;
+}
+
+.vote-count {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 36px;
+    font-weight: bold;
+}

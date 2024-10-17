@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 // @NoArgsConstructor
 //@AllArgsConstructor
 @RequestMapping("/votes")
-public class Controller {
+public class VoteController {
     @Autowired
     private VoteService voteService;
 
