@@ -21,14 +21,14 @@ public class VoteController {
     }
 
     // Create a new vote topic
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     @PostMapping("/create")
     public Mono<ResponseEntity<Vote>> createVote(@RequestBody Vote newVote) {
         return voteService.createVote(newVote).map(ResponseEntity::ok);
     }
 
     // Stream votes to all clients (Server-Sent Events)
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ServerSentEvent<Vote>> streamVotes() {
         return voteService.streamVotes()
@@ -36,7 +36,7 @@ public class VoteController {
     }
 
     // Vote agree
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     @PostMapping("/agree/{id}")
     public Mono<ResponseEntity<Vote>> voteAgree(@PathVariable Long id) {
         return voteService.voteAgree(id)
@@ -45,7 +45,7 @@ public class VoteController {
     }
 
     // Vote disagree
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     @PostMapping("/disagree/{id}")
     public Mono<ResponseEntity<Vote>> voteDisagree(@PathVariable Long id) {
         return voteService.voteDisagree(id)
@@ -54,7 +54,7 @@ public class VoteController {
     }
 
     // Get vote results by id
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     @GetMapping("/{id}")
     public Mono<ResponseEntity<Vote>> getVoteById(@PathVariable Long id) {
         return voteService.getVoteById(id)
@@ -63,7 +63,7 @@ public class VoteController {
     }
 
     // Get all vote topics and their results
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     @GetMapping("/all")
     public Flux<Vote> getAllVotes() {
         return voteService.getAllVotes();

@@ -4,14 +4,17 @@ import './VotingComponent.css';
 function VotingComponent({ topic, voteId, setIsVoting }) {
     const [agree, setAgree] = useState(0);
     const [disagree, setDisagree] = useState(0);
-    const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
+    const [timeLeft, setTimeLeft] = useState(30); // 30 seconds
 
     useEffect(() => {
-        const eventSource = new EventSource("http://localhost:8080/votes/stream");
+        const eventSource = new EventSource("http://192.168.1.41:8080/votes/stream");
         eventSource.onmessage = (event) => {
             const data = JSON.parse(event.data);
             setAgree(data.agree);
             setDisagree(data.disagree);
+        };
+        eventSource.onerror = () => {
+            eventSource.close();
         };
         return () => {
             eventSource.close();
@@ -30,7 +33,7 @@ function VotingComponent({ topic, voteId, setIsVoting }) {
     }, [timeLeft, setIsVoting]);
 
     const vote = (type) => {
-        fetch(`http://localhost:8080/votes/${type}/${voteId}`, {
+        fetch(`http://192.168.1.41:8080/votes/${type}/${voteId}`, {
             method: "POST",
         });
     };

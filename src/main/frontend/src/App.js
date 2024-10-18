@@ -11,7 +11,7 @@ function App() {
     useEffect(() => {
         const fetchRecentVotes = async () => {
             try {
-                const response = await fetch('http://localhost:8080/votes/all');
+                const response = await fetch('http://192.168.1.41:8080/votes/all');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -24,10 +24,29 @@ function App() {
         fetchRecentVotes();
     }, []);
 
+    useEffect(() => {
+        const fetchCurrentVote = async () => {
+            try {
+                const response = await fetch('http://192.168.1.41:8080/votes/current');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && data.topic) {
+                        setTopic(data.topic);
+                        setVoteId(data.id);
+                        setIsVoting(true);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching current vote:', error);
+            }
+        };
+        fetchCurrentVote();
+    }, []);
+
     const handleStart = async () => {
         if (topic.trim() !== "") {
             try {
-                const response = await fetch('http://localhost:8080/votes/create', {
+                const response = await fetch('http://192.168.1.41:8080/votes/create', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
