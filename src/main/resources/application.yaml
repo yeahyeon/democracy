@@ -1,17 +1,17 @@
 spring:
+    main:
+        allow-bean-definition-overriding: true
+
     r2dbc:
         url: r2dbc:mysql://localhost:3306/vote
         username: root
         password: dPdmsdk?0928
-    datasource:
-        driver-class-name: io.r2dbc.spi.ConnectionFactory
-    application:
-        name: vote
 
 r2dbc:
     pool:
         enabled: true
         max-size: 20
-    my:
-        connection:
-            validation-query: "SELECT 1"
+
+server:
+    address: 0.0.0.0
+    port: 8080
