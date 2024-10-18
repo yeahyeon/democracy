@@ -4,7 +4,7 @@ import './VotingComponent.css';
 function VotingComponent({ topic, voteId, setIsVoting }) {
     const [agree, setAgree] = useState(0);
     const [disagree, setDisagree] = useState(0);
-    const [timeLeft, setTimeLeft] = useState(null); // 남은 시간, null로 시작
+    const [timeLeft, setTimeLeft] = useState(30); // 기본값을 30초로 설정
     const [isEnded, setIsEnded] = useState(false); // 투표 종료 상태
 
     // 서버에서 남은 시간을 받아오는 함수
@@ -19,6 +19,7 @@ function VotingComponent({ topic, voteId, setIsVoting }) {
             }
         } catch (error) {
             console.error('Error fetching remaining time:', error);
+            setTimeLeft(30); // 서버로부터 값을 받지 못할 경우 기본값을 설정
         }
     };
 
@@ -131,3 +132,17 @@ function VotingComponent({ topic, voteId, setIsVoting }) {
 }
 
 export default VotingComponent;
+
+
+
+
+
+
+
+
+
+
+
+
+
+

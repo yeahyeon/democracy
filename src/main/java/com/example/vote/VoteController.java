@@ -69,6 +69,7 @@ public class VoteController {
         return voteService.getAllVotes();
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/{id}/remainingTime")
     public Mono<ResponseEntity<Map<String, Long>>> getRemainingTime(@PathVariable Long id) {
         return voteService.getVoteById(id)
@@ -85,6 +86,7 @@ public class VoteController {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/{id}/isEnded")
     public Mono<ResponseEntity<Map<String, Boolean>>> isVoteEnded(@PathVariable Long id) {
         return voteService.getVoteById(id)
